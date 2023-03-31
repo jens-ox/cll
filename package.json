@@ -1,0 +1,8 @@
+{
+  "name": "cll",
+  "version": "1.0.0",
+  "description": "Component Library Library: A library of different component library setups",
+  "author": "Jens Ochsenmeier <github@jens-ox.de> (https://jens-ox.de)",
+  "license": "MIT",
+  "private": true
+}

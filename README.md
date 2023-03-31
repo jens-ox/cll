@@ -21,7 +21,8 @@ We will also set up all libraries as [ES Modules](https://nodejs.org/api/esm.htm
 
 ## [Level 1: Barebones](./lib/bare/)
 
-> Setup: React
+> **Note**
+> Summary: Absolute bare minimum necessary to share a React component.
 
 While I would not recommend doing this, you can use React completely without a build step. Doing so results in the absolute most minimal setup possible.
 
@@ -87,7 +88,8 @@ import { Button } from '@cll/lib-bare'
 
 ## [Level 2: Barebones TypeScript](./lib/bare-ts/)
 
-> Setup: React, TypeScript
+> **Note**
+> Summary: Bare minimum required for sharing a React component written in TypeScript.
 
 Nobody wants to write React without JSX. As we're going to need a build step anyway and there's no sane reason to build something without TypeScript nowadays, we're going to go directly to JSX + TypeScript.
 

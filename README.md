@@ -76,4 +76,4 @@ import { Button } from '@cll/lib-bare'
 ```
 
 ![Button inside our demo app](./.github/screenshots/lib-bare.png)
-<figcaption style="text-align:center;font-size:.75rem;opacity:80%">Our ugly button within our demo app!</figcaption>
+<figcaption>Our ugly button within our demo app!</figcaption>

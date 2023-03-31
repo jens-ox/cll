@@ -1,0 +1,8 @@
+{
+  "name": "@cll/lib-bare",
+  "main": "./index.js",
+  "type": "module",
+  "dependencies": {
+    "react": "18.2.0"
+  }
+}

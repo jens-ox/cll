@@ -6,6 +6,13 @@ The goal of this repo is to showcase different setups that allow you to share Re
 
 In most corporate landscapes you have multiple UIs that live in different repositories. In order to avoid duplication and improve consistency, common components such as buttons and dialogs should be shared across those repositories.
 
+## Available library setups
+
+Currently the following setups are available:
+
+- [**bare**](#level-1-barebones) - absolute bare minimum required to share a React component, doesn't even use JSX.
+- [**bare-ts**](#level-2-barebones-typescript) - simplest TypeScript setup possible.
+
 ## Setup
 
 In order to not overcomplicate things unnecessarily, each sharing setup will have one library (that houses the components to be shared) and one simple Next.js app (that consumes the shared components).

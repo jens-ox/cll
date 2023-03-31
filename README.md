@@ -74,8 +74,7 @@ Within an app, you can now use the button component by importing it like this:
 import { Button } from '@cll/lib-bare'
 ```
 
-![Button inside our demo app](./.github/screenshots/lib-bare.png | width=400)
-
+<img style="max-width: 400px; height: auto; " src="./.github/screenshots/lib-bare.png" />
 <figcaption>Our ugly button within our demo app!</figcaption>
 
 ## [Level 2: Barebones TypeScript](./lib/bare-ts/)
@@ -141,7 +140,7 @@ The library can now be published and consumed analogous to the library from Leve
 
 Once we run `pnpm build` for our library once more (and publish it if necessary), VSCode understands the type of our imported button:
 
-![VSCode understands the button's type](./.github/screenshots/vscode-screenshot1.png)
+<img style="max-width: 400px; height: auto; " src="./.github/screenshots/vscode-screenshot1.png" />
 
 ## Appendix
 

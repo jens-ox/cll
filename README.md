@@ -74,7 +74,7 @@ Within an app, you can now use the button component by importing it like this:
 import { Button } from '@cll/lib-bare'
 ```
 
-![Button inside our demo app](./.github/screenshots/lib-bare.png)
+![Button inside our demo app](./.github/screenshots/lib-bare.png | width=400)
 
 <figcaption>Our ugly button within our demo app!</figcaption>
 

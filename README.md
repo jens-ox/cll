@@ -22,6 +22,7 @@ We will also set up all libraries as [ES Modules](https://nodejs.org/api/esm.htm
 ## [Level 1: Barebones](./lib/bare/)
 
 > **Note**
+>
 > Summary: Absolute bare minimum necessary to share a React component.
 
 While I would not recommend doing this, you can use React completely without a build step. Doing so results in the absolute most minimal setup possible.
@@ -89,6 +90,7 @@ import { Button } from '@cll/lib-bare'
 ## [Level 2: Barebones TypeScript](./lib/bare-ts/)
 
 > **Note**
+>
 > Summary: Bare minimum required for sharing a React component written in TypeScript.
 
 Nobody wants to write React without JSX. As we're going to need a build step anyway and there's no sane reason to build something without TypeScript nowadays, we're going to go directly to JSX + TypeScript.
@@ -152,6 +154,147 @@ Once we run `pnpm build` for our library once more (and publish it if necessary)
 
 ![VSCode understands the button's type](./.github/screenshots/vscode-screenshot1.png)
 
+## Level 3: Bare-bones TypeScript with tooling
+
+> **Note**
+>
+> Summary: Technically identical to bare-ts, but with a proper ESLint setup, tsup for faster builds, and a simple GitHub Action.
+
+**ESLint**
+
+We will now extend Level 2 by setting up linting using [ESLint](https://eslint.org/):
+
+```sh
+pnpm add -D eslint eslint-config-standard-with-typescript eslint-plugin-prettier eslint-config-prettier eslint-config-standard eslint-plugin-react
+```
+
+- `eslint`: the binaries doing the actual linting.
+- `eslint-config-standard-with-typescript`: an opinionated set of rules to follow the [JavaScript Standard Style](https://standardjs.com/), including TypeScript support.
+- `eslint-plugin-react`: react-specific ESLint rules.
+- `eslint-plugin-prettier`: let's us run [Prettier](https://prettier.io/) as part of ESLint. Prettier takes care of things like line lengths etc.
+- `eslint-config-prettier`: in order to avoid clashes between ESLint end Prettier, this config overwrites all ESLint rules that would clash with prettier.
+
+Now, we can set up an `.eslintrc.js`:
+
+```js
+module.exports = {
+  root: true,
+  ignorePatterns: ['dist/**/*'],
+  extends: [
+    'standard-with-typescript',
+    'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
+    'plugin:prettier/recommended'
+  ],
+  plugins: ['react', 'prettier'],
+  rules: {
+    'react/prop-types': 'off',
+    'import/order': 'error',
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': 'error',
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'prettier/prettier': [
+      'error',
+      {
+        tabWidth: 2,
+        printWidth: 120,
+        singleQuote: true,
+        trailingComma: 'none',
+        semi: false
+      }
+    ]
+  },
+  settings: {
+    react: {
+      version: 'detect'
+    }
+  },
+  parserOptions: {
+    project: 'tsconfig.json'
+  }
+}
+```
+
+A couple of notes on the config:
+
+- We don't want to lint the build artifacts, so we add `dist` to the `ignorePatterns`.
+- In addition to `react/recommended`, we also include `react/jsx-runtime`, as we're using the [new JSX runtime as of React 17](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html).
+- `react/prop-types` is turned off as the props are typed through TypeScript.
+- `no-use-before-define`: we want to use the TypeScript version, so we turn off the JavaScript one.
+
+> **Note**
+>
+> Yes, configuring ESLint is currently quite uncomfortable. There will be a [new config format](https://eslint.org/docs/latest/use/configure/configuration-files-new) soon, but as of now it's still experimental and many libraries (like `@typescript-eslint`) don't support it, yet.
+
+**tsup**
+
+Compiling our 5 LOC, 1-component component library currently takes 2.4s on my machine. Once a library gets bigger, the compile time can grow significantly. Over the last years, a lot of fantastic Rust- and Go-based tooling has been developed. We're going to use [tsup](https://tsup.egoist.dev/), which internally uses [esbuild](https://esbuild.github.io/):
+
+```sh
+pnpm add -D tsup
+```
+
+We'll use the following `tsup.config.ts` config file:
+
+
+```ts
+import { defineConfig } from 'tsup'
+
+export default defineConfig({
+  entry: ['src/index.tsx'],
+  dts: true,
+  target: 'esnext',
+  format: 'esm',
+  sourcemap: true,
+  minify: false
+})
+```
+
+Update the `package.json` accordingly:
+
+```json
+{
+  "scripts": {
+    "build": "tsup"
+  }
+}
+```
+
+Running `pnpm build` now takes 1.4s on my machine, and only 4ms of those are spent on actually compiling the library.
+
+**GitHub Action**
+
+> **Note**
+>
+> As this repository is a monorepo, all actions will be in `.github/workflows`. If you copy one library from here, don't forget to also copy the respective workflow!
+
+We'll add a simple GitHub Actions job that lints the library and builds it:
+
+
+```yml
+name: bare-ts-tooling
+on: [push]
+jobs:
+  Simple-Gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.1.0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "pnpm"
+      - run: pnpm install
+      - name: Linting
+        run: pnpm lint
+      - name: Build
+        run: pnpm build
+```
+
+While there's lots of stuff that could be added in terms of tooling (size checks, auto-publish on tagging,...) this should suffice for now.
+
 ## Appendix
 
 ### Dependency Types
@@ -162,4 +305,4 @@ There are three types of dependencies - normal dependencies, development depende
 | ------------------ | ------------- | ------------- |
 | `dependencies`     | Dependencies that are referenced within code that will be included in the bundle (e.g. component libraries, `react-query`) | =, with the exceptions (see below) |
 | `devDependencies`  | Dependencies needed to build the bundle (e.g. types, build tooling) | =, plus dependencies you want to be bundled in your library bundle (ideally none) |
-| `peerDependencies` | None | Dependencies without which your library is useless within the application context (usually this is only `react`). Often, you also need peer dependencies as development dependency, so that your IDE knows what's going on. Make sure to make the version requirement in the peer dependencies as loose as possible to maximize compatibility. |
+| `peerDependencies` | None | Dependencies without which your library is useless within the application context (usually this is only `react`). Make sure to make the version requirement in the peer dependencies as loose as possible to maximize compatibility. |

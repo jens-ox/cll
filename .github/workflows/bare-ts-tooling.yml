@@ -1,0 +1,19 @@
+name: bare-ts-tooling
+on: [push]
+jobs:
+  Simple-Gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.1.0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "pnpm"
+      - run: pnpm install
+      - name: Linting
+        run: pnpm --filter @cll/lib-bare-ts-tooling lint
+      - name: Build
+        run: pnpm --filter @cll/lib-bare-ts-tooling build

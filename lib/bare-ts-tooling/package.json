@@ -1,0 +1,24 @@
+{
+  "name": "@cll/lib-bare-ts-tooling",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "dependencies": {
+    "react": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "18.0.31",
+    "eslint": "8.37.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-config-standard-with-typescript": "^34.0.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "tsup": "^6.7.0",
+    "typescript": "5.0.3"
+  },
+  "scripts": {
+    "build": "tsup",
+    "lint": "eslint ."
+  }
+}

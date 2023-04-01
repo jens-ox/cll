@@ -2,6 +2,10 @@ import { ButtonBase, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { type PropsWithChildren } from 'react'
 
+/**
+ * Example from https://mui.com/material-ui/react-button/#complex-button.
+ */
+
 const ImageButton = styled(ButtonBase)(({ theme }) => ({
   position: 'relative',
   height: 200,

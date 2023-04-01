@@ -8,7 +8,6 @@
     "jsx": "react-jsx",
     "declaration": true,
     "allowImportingTsExtensions": true,
-    "noEmit": true,
-    "allowJs": true
+    "noEmit": true
   }
 }

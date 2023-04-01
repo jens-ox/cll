@@ -439,40 +439,46 @@ This creates a `postcss.config.js` and a `tailwind.config.js`. As our library is
 
 As we want to expose custom theme values later, we will split the `tailwind.config.js` into two parts:
 
-- `tailwind.base.js` includes everything we want to share with downstream applications, like custom colors.
-- `tailwind.config.js` is the Tailwind config used by our library. It extends the base config with configuration specific to our library, like `content`.
+- `tailwind.base.ts` includes everything we want to share with downstream applications, like custom colors.
+- `tailwind.config.ts` is the Tailwind config used by our library. It extends the base config with configuration specific to our library, like `content`.
 
-Our `tailwind.base.js` looks like this (yes, [Tailwind now supports ES Module config files](https://tailwindcss.com/blog/tailwindcss-v3-3)):
+Our `tailwind.base.ts` looks like this (yes, [Tailwind now supports ES Module config files](https://tailwindcss.com/blog/tailwindcss-v3-3)):
 
 ```js
-/** @type {import('tailwindcss').Config} */
-export default {
+import { type Config } from 'tailwindcss'
+
+const config: Config = {
+  content: [],
   theme: {
     extend: {
       colors: {
-        fancy: 'steelblue' // this is just for demo purposes :D
+        fancy: 'steelblue'
       }
     }
   }
 }
+
+export default config
 ```
 
-Our `tailwind.config.js` looks like this:
+Our `tailwind.config.ts` looks like this:
 
 ```js
-import base from './src/tailwind.base.js'
+import { type Config } from 'tailwindcss'
+import base from './src/tailwind.base.ts'
 
-/** @type {import('tailwindcss').Config} */
-export default {
-  presets: [base], // use the base config as preset
+const config: Config = {
+  presets: [base],
   content: ['./src/**/*.tsx'],
   corePlugins: {
-    preflight: false // we don't want to include a style reset in our library's CSS
+    preflight: false
   }
 }
+
+export default config
 ```
 
-As we want to expose the base config, we'll put it in `src/tailwind.base.js` and export it in `src/index.ts`:
+As we want to expose the base config, we'll put it in `src/tailwind.base.ts` and export it in `src/index.ts`:
 
 ```ts
 // src/index.ts
@@ -480,10 +486,8 @@ As we want to expose the base config, we'll put it in `src/tailwind.base.js` and
 import './styles.css'
 
 export * from './button/index.tsx'
-export { default as tailwindConfig } from './tailwind.base.js'
+export { default as tailwindConfig } from './tailwind.base.ts'
 ```
-
-This will require `allowJs` to be set in `tsconfig.json`.
 
 Downstream applications will be able to import the config like this:
 

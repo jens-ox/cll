@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "strict": true, 
+    "strictNullChecks": true,
+    "target": "ESNext",
+    "moduleResolution": "nodenext",
+    "outDir": "dist",
+    "jsx": "react-jsx",
+    "declaration": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  }
+}

@@ -13,7 +13,7 @@ Currently the following setups are available - each one builds up on the previou
 - [**bare**](#level-1-barebones) - absolute bare minimum required to share a React component, doesn't even use JSX.
 - [**bare-ts**](#level-2-barebones-typescript) - simplest TypeScript setup possible.
 - [**bare-ts-tooling**](#level-3-bare-bones-typescript-with-tooling) - same as `bare-ts`, but with ESLint, tsup and a GitHub Action.
-- [**css**]
+- [**css**](#level-4-css) - adds global and component styling to `bare-ts-tooling`.
 
 ## Setup
 

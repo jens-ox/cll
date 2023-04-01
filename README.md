@@ -228,7 +228,39 @@ A couple of notes on the config:
 
 **tsup**
 
-Compiling our 5 LOC, 1-component component library currently takes 2.4s on my machine. Once a library gets bigger, the compile time can grow significantly. Over the last years, a lot of fantastic Rust- and Go-based tooling has been developed. We're going to use [tsup](https://tsup.egoist.dev/), which internally uses [esbuild](https://esbuild.github.io/).
+Compiling our 5 LOC, 1-component component library currently takes 2.4s on my machine. Once a library gets bigger, the compile time can grow significantly. Over the last years, a lot of fantastic Rust- and Go-based tooling has been developed. We're going to use [tsup](https://tsup.egoist.dev/), which internally uses [esbuild](https://esbuild.github.io/):
+
+```sh
+pnpm add -D tsup
+```
+
+We'll use the following `tsup.config.ts` config file:
+
+
+```ts
+import { defineConfig } from 'tsup'
+
+export default defineConfig({
+  entry: ['src/index.tsx'],
+  dts: true,
+  target: 'esnext',
+  format: 'esm',
+  sourcemap: true,
+  minify: false
+})
+```
+
+Update the `package.json` accordingly:
+
+```json
+{
+  "scripts": {
+    "build": "tsup"
+  }
+}
+```
+
+Running `pnpm build` now takes 1.4s on my machine, and only 4ms of those are spent on actually compiling the library.
 
 ## Appendix
 

@@ -1,5 +1,5 @@
 {
-  "name": "bare-ts-tooling",
+  "name": "@cll/app-bare-ts-tooling",
   "version": "0.1.0",
   "private": true,
   "scripts": {

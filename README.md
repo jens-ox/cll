@@ -367,6 +367,10 @@ import './styles.css'
 export * from './button/index.tsx'
 ```
 
+> **Note**
+>
+> To avoid clashes between the library and application CSS, I would recommend to not style tags directly and use CSS classes instead - ideally prefixing them in some way, e.g. `.acme-ui-button`.
+
 **Using the generated CSS**
 
 When consuming your library, you also need to import the generated stylesheet from `dist/index.css`. In Next.js, you would typically do this in `_app.tsx`.

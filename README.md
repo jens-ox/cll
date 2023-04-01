@@ -1,4 +1,4 @@
-ts# Component Library Library
+# Component Library Library
 
 The goal of this repo is to showcase different setups that allow you to share React components between repositories.
 

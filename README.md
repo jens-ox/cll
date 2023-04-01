@@ -162,4 +162,4 @@ There are three types of dependencies - normal dependencies, development depende
 | ------------------ | ------------- | ------------- |
 | `dependencies`     | Dependencies that are referenced within code that will be included in the bundle (e.g. component libraries, `react-query`) | =, with the exceptions (see below) |
 | `devDependencies`  | Dependencies needed to build the bundle (e.g. types, build tooling) | =, plus dependencies you want to be bundled in your library bundle (ideally none) |
-| `peerDependencies` | None | Dependencies without which your library is useless within the application context (usually this is only `react`) |
+| `peerDependencies` | None | Dependencies without which your library is useless within the application context (usually this is only `react`). Often, you also need peer dependencies as development dependency, so that your IDE knows what's going on. Make sure to make the version requirement in the peer dependencies as loose as possible to maximize compatibility. |

@@ -30,6 +30,7 @@ Currently the following setups are available - each one builds up on the previou
 - [**bare-ts-tooling**](#level-3-bare-bones-typescript-with-tooling) - same as `bare-ts`, but with ESLint, tsup and a GitHub Action.
 - [**css**](#level-4-css) - adds global and component styling to `bare-ts-tooling`.
 - [**tailwind**](#level-5-tailwind) - adds [TailwindCSS](https://tailwindcss.com/) to `css`.
+- [**mui**](#level-6-material-ui) - based on `bare-ts-tooling`, custom Material UI theme and custom component.
 
 ## Setup
 
@@ -115,7 +116,7 @@ This repo uses a PNPM workspace setup, so we don't need to publish the packages 
 Within an app, you can now use the button component by importing it like this:
 
 ```js
-import { Button } from '@cll/lib-bare'
+import { Button } from 'our-library'
 ```
 
 ![Button inside our demo app](./.github/screenshots/lib-bare.png)
@@ -410,7 +411,7 @@ When consuming your library, you also need to import the generated stylesheet fr
 
 ```tsx
 import '@/styles/globals.css'
-import '@cll/lib-css/dist/index.css'
+import 'our-library/dist/index.css'
 
 /* ... */
 ```
@@ -435,7 +436,7 @@ Afterwards, we can import the CSS like this:
 
 ```tsx
 import '@/styles/globals.css'
-import '@cll/lib-css/styles'
+import 'our-library/styles'
 
 /* ... */
 ```
@@ -571,9 +572,82 @@ button {
 
 If everything works correctly, running `pnpm build` should yield a `dist/index.css` that contains classes from `src/style.css` (including the inline classes from `src/button/index.tsx`) and `src/button/styles.css`.
 
-![Custom Tailwind button](./.github/screenshots/tailwind.png)
+![Custom Tailwind button](./.github/screenshots/tailwind.jpeg)
 
 Note the steelblue text at the left bottom, using `text-fancy` :relaxed:
+
+## Level 6: Material UI
+
+> **Note**
+>
+> Summary: TypeScript, ESLint + Prettier, tsup, Material UI
+
+Compared to Tailwind, sharing Material UI (MUI) components is relatively straight-forward. 
+
+We're going to start with `bare-ts-tooling`, reusing the `tsup` setup.
+
+**Setting up Material UI**
+
+We will make the assumption that all applications using our MUI components will also use MUI. Therefore, we will set up MUI as a peer dependency of our library. The only difference between declaring it as a peer dependency instead of a dependency is, that the downstream application will be forced to use a compatible version of MUI. Imagine having MUI v4 in the application and MUI v5 in the library - that will cause two competing versions of MUI to be in the final application bundle.
+
+```sh
+pnpm add -D @mui/material --save-peer
+```
+
+For our application, we're going to use [`next-ts` example](https://github.com/mui/material-ui/tree/master/examples/material-next-ts) provided by MUI.
+
+**Theming**
+
+MUI provides a plethora of components - it should be obvious that wrapping every single one of them does not make any sense and is certainly not the intention of the MUI authors.
+
+Instead, MUI provides a [theming](https://mui.com/material-ui/customization/theming/) solution - by wrapping your application in a theme, you can customize all design aspects of your application. Think of it as a configuration object shared across all MUI components you use.
+
+We will create a simple theme in `src/theme.ts`:
+
+```ts
+import { createTheme } from '@mui/material'
+
+export const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#ffe4e1'
+    },
+    secondary: {
+      main: '#edf2ff'
+    }
+  }
+})
+```
+
+Additionally, we will replace the button in `src/index.tsx` with `src/Button.tsx` (see code) and adapt `src/index.tsx` accordingly:
+
+```ts
+export * from './theme.ts'
+export * from './Button.tsx'
+```
+
+And that's it! `pnpm build` should correctly generate the contents of the `dist` folder.
+
+**Consuming**
+
+We can use the library theme in our applications like this:
+
+```tsx
+import { theme } from 'our-library';
+
+// Create a theme instance.
+export const appTheme = createTheme(theme, {
+  palette: {
+    error: {
+      main: red.A400,
+    },
+  },
+});
+```
+
+All that's left to do is to use some component, like the fancy button in our case, and consume the theme where necessary:
+
+![MUI](./.github/screenshots/mui.jpeg)
 
 ## Appendix
 

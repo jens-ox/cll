@@ -18,9 +18,9 @@ Currently the following setups are available - each one builds up on the previou
 
 ## Setup
 
-In order to not overcomplicate things unnecessarily, each sharing setup will have one library (that houses the components to be shared) and one simple Next.js app (that consumes the shared components).
+In order to not over-complicate things unnecessarily, each sharing setup will have one library (that houses the components to be shared) and one simple Next.js app (that consumes the shared components).
 
-We will also set up all libraries as [ES Modules](https://nodejs.org/api/esm.html#introduction). All libraries (with exception of the barebones example) will be written in [TypeScript](https://www.typescriptlang.org/). We are going to use [`pnpm`](https://pnpm.io/) as a package manager (but everything will work with `npm` or `yarn` just fine).
+We will also set up all libraries as [ES Modules](https://nodejs.org/api/esm.html#introduction). All libraries (with exception of the bare-bones example) will be written in [TypeScript](https://www.typescriptlang.org/). We are going to use [`pnpm`](https://pnpm.io/) as a package manager (but everything will work with `npm` or `yarn` just fine).
 
 To run a specific library locally,
 
@@ -28,6 +28,16 @@ To run a specific library locally,
 2. `pnpm install` at the root,
 3. `pnpm build` in the library of your choice,
 4. `pnpm dev` in its consuming application.
+
+## Core Concepts
+
+All libraries are intended to be used in React applications that have some kind of proper build step. That means that you will not be able to do old-school shenanigans like sourcing it directly via a `script` tag in some hand-written HTML.
+
+This makes our lives as library authors way more comfortable:
+
+- We do not minify our library. The application that consumes the library does.
+- We do not bundle dependencies (with exceptions, as always). The application's bundling step resolves dependencies transitively.
+- We do not polyfill for random old browsers. The application's bundling step does so if necessary.
 
 ## [Level 1: Barebones](./lib/bare/)
 

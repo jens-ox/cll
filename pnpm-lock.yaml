@@ -103,6 +103,39 @@ importers:
         specifier: 5.0.3
         version: 5.0.3
 
+  app/css:
+    dependencies:
+      '@cll/lib-css':
+        specifier: workspace:../../lib/css
+        version: link:../../lib/css
+      '@types/node':
+        specifier: 18.15.11
+        version: 18.15.11
+      '@types/react':
+        specifier: 18.0.31
+        version: 18.0.31
+      '@types/react-dom':
+        specifier: 18.0.11
+        version: 18.0.11
+      eslint:
+        specifier: 8.37.0
+        version: 8.37.0
+      eslint-config-next:
+        specifier: 13.2.4
+        version: 13.2.4(eslint@8.37.0)(typescript@5.0.3)
+      next:
+        specifier: 13.2.4
+        version: 13.2.4(react-dom@18.2.0)(react@18.2.0)
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
+      typescript:
+        specifier: 5.0.3
+        version: 5.0.3
+
   lib/bare:
     dependencies:
       react:
@@ -123,6 +156,40 @@ importers:
         version: 5.0.3
 
   lib/bare-ts-tooling:
+    dependencies:
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+    devDependencies:
+      '@types/react':
+        specifier: 18.0.31
+        version: 18.0.31
+      eslint:
+        specifier: 8.37.0
+        version: 8.37.0
+      eslint-config-prettier:
+        specifier: ^8.8.0
+        version: 8.8.0(eslint@8.37.0)
+      eslint-config-standard:
+        specifier: ^17.0.0
+        version: 17.0.0(eslint-plugin-import@2.27.5)(eslint-plugin-n@15.7.0)(eslint-plugin-promise@6.1.1)(eslint@8.37.0)
+      eslint-config-standard-with-typescript:
+        specifier: ^34.0.1
+        version: 34.0.1(@typescript-eslint/eslint-plugin@5.57.0)(eslint-plugin-import@2.27.5)(eslint-plugin-n@15.7.0)(eslint-plugin-promise@6.1.1)(eslint@8.37.0)(typescript@5.0.3)
+      eslint-plugin-prettier:
+        specifier: ^4.2.1
+        version: 4.2.1(eslint-config-prettier@8.8.0)(eslint@8.37.0)(prettier@2.8.7)
+      eslint-plugin-react:
+        specifier: ^7.32.2
+        version: 7.32.2(eslint@8.37.0)
+      tsup:
+        specifier: ^6.7.0
+        version: 6.7.0(typescript@5.0.3)
+      typescript:
+        specifier: 5.0.3
+        version: 5.0.3
+
+  lib/css:
     dependencies:
       react:
         specifier: 18.2.0

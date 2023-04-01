@@ -293,6 +293,8 @@ jobs:
         run: pnpm build
 ```
 
+While there's lots of stuff that could be added in terms of tooling (size checks, auto-publish on tagging,...) this should suffice for now.
+
 ## Appendix
 
 ### Dependency Types

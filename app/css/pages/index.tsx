@@ -3,7 +3,6 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { Button } from '@cll/lib-css'
-import '@cll/lib-css/styles'
 
 const inter = Inter({ subsets: ['latin'] })
 

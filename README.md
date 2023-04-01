@@ -1,4 +1,4 @@
-# Component Library Library
+ts# Component Library Library
 
 The goal of this repo is to showcase different setups that allow you to share React components between repositories.
 
@@ -8,11 +8,12 @@ In most corporate landscapes you have multiple UIs that live in different reposi
 
 ## Available library setups
 
-Currently the following setups are available:
+Currently the following setups are available - each one builds up on the previous one.
 
 - [**bare**](#level-1-barebones) - absolute bare minimum required to share a React component, doesn't even use JSX.
 - [**bare-ts**](#level-2-barebones-typescript) - simplest TypeScript setup possible.
 - [**bare-ts-tooling**](#level-3-bare-bones-typescript-with-tooling) - same as `bare-ts`, but with ESLint, tsup and a GitHub Action.
+- [**css**]
 
 ## Setup
 
@@ -101,11 +102,12 @@ Starting from the Level 1 code, we
 - move the `index.js` to `src/index.tsx` (to better separate code and build artefact later), and
 - add `typescript` and React's types to our `devDependencies` (see the [Appendix](#dependency-types) for an overview over the different dependency types): `pnpm add -D typescript @types/react`.
 
-Once we set up a build step, the built library will be exposed in `dist/index.js`, so we update the `package.json` accordingly:
+Once we set up a build step, the built library will be exposed in `dist/index.js` together with a declaration file at `dist/index.d.ts`, so we update the `package.json` accordingly:
 
 ```json
 {
-  "main": "dist/index.js"
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts"
 }
 ```
 
@@ -159,7 +161,9 @@ Once we run `pnpm build` for our library once more (and publish it if necessary)
 
 > **Note**
 >
-> Summary: Technically identical to bare-ts, but with a proper ESLint setup, tsup for faster builds, and a simple GitHub Action.
+> Summary: TypeScript, ESLint + Prettier, tsup, GitHub Actions
+
+This level extends [`bare-ts`](#level-2-barebones-typescript) by adding a proper ESLint setup, tsup for faster builds, and a simple GitHub Action.
 
 **ESLint**
 
@@ -263,6 +267,20 @@ Update the `package.json` accordingly:
 
 Running `pnpm build` now takes 1.4s on my machine, and only 4ms of those are spent on actually compiling the library.
 
+**Watch mode**
+
+To avoid having to re-build the library everytime you change something, you can use the watch mode provided by `tsup`. Simply add a script to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "dev": "tsup --watch"
+  }
+}
+```
+
+Running `pnpm dev` will now re-build the library on file changes.
+
 **GitHub Action**
 
 > **Note**
@@ -295,6 +313,95 @@ jobs:
 ```
 
 While there's lots of stuff that could be added in terms of tooling (size checks, auto-publish on tagging,...) this should suffice for now.
+
+## Level 4: CSS
+
+> **Note**
+>
+> Summary: TypeScript, ESLint + Prettier, tsup, GitHub Actions, vanilla CSS
+
+As we're now using `tsup` for building our library, adding CSS becomes very comfortable, as `tsup` supports this natively (through `esbuild`).
+
+**Rearranging**
+
+But first, we're going to do some quality-of-life improvements by preparing a separation of components:
+
+- add a new file, `src/button/index.tsx` and move the button component there.
+- replace `src/index.tsx` with just `export * from './button/index.tsx`.
+
+We're using `nodenext` for our module resolution in `tsconfig.json`, which requires us to use file extensions for our imports. But TypeScript doesn't like this by default - we have to set `allowImportingTsExtensions` in our `tsconfig` first do to that, which also requires us to set `noEmit`.
+
+> **Note**
+>
+> You could also set your module resolution to `node` and do `export * from './button` instead. We we'd use `tsc` to compile our library, we would have to do `export * from './button/index.js` and therefore reference a non-existent file. [There's a long explanation by the TS team as to why this is a sensible decision](https://github.com/microsoft/TypeScript/issues/49083#issuecomment-1435399267). We're using `tsup` to build our library, so setting `noEmit` is not a problem.
+
+**Adding CSS**
+
+Create a `src/button/styles.css` that includes something like this:
+
+```css
+.button {
+  background: steelblue;
+  color: white;
+  border: none;
+}
+```
+
+We can then import those styles into our component by doing `import './styles.css'`:
+
+```tsx
+import { type PropsWithChildren } from 'react'
+import './styles.css'
+
+export const Button: React.FC<PropsWithChildren> = ({ children }) => <button className="button">{children}</button>
+```
+
+If we now run `pnpm build`, you will see an `index.css` in your `dist` folder.
+
+If you want, you can additionally add a global stylesheet by creating `src/styles.css` and referencing it in `src/index.tsx`:
+
+
+```tsx
+import './styles.css'
+
+export * from './button/index.tsx'
+```
+
+**Using the generated CSS**
+
+When consuming your library, you also need to import the generated stylesheet from `dist/index.css`. In Next.js, you would typically do this in `_app.tsx`.
+
+```tsx
+import '@/styles/globals.css'
+import '@cll/lib-css/dist/index.css'
+
+/* ... */
+```
+
+> **Note**
+>
+> The order of CSS imports matters. What the "correct" order is depends a bit on your setup - usually, your application will do a CSS reset, therefore importing your library's CSS after your application's CSS might be sensible.
+
+To make importing the styles a bit nicer, we can replace the `main` field with an [`exports` field](https://nodejs.org/api/packages.html#exports) to our library's `package.json` file:
+
+
+```json
+{
+  "exports": {
+    ".": "./dist/index.js",
+    "./styles": "./dist/index.css"
+  },
+}
+```
+
+Afterwards, we can import the CSS like this:
+
+```tsx
+import '@/styles/globals.css'
+import '@cll/lib-css/styles'
+
+/* ... */
+```
 
 ## Appendix
 

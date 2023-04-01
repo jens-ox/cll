@@ -1,6 +1,9 @@
 {
-  "name": "@cll/lib-bare-ts-tooling",
-  "main": "./dist/index.js",
+  "name": "@cll/lib-css",
+  "exports": {
+    ".": "./dist/index.js",
+    "./styles": "./dist/index.css"
+  },
   "types": "./dist/index.d.ts",
   "type": "module",
   "dependencies": {

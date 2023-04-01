@@ -288,9 +288,9 @@ jobs:
           cache: "pnpm"
       - run: pnpm install
       - name: Linting
-        run: pnpm --filter @ccl/lib-bare-ts-tooling lint
+        run: pnpm lint
       - name: Build
-        run: pnpm --filter @ccl/lib-bare-ts-tooling build
+        run: pnpm build
 ```
 
 ## Appendix

@@ -3,7 +3,7 @@
 The goal of this repo is to showcase different setups that allow you to share React components between repositories.
 
 ```mermaid
-graph TD;
+graph LR;
     1(bare);
     2(bare-ts);
     3(bare-ts-tooling);

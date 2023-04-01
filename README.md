@@ -21,6 +21,13 @@ In order to not overcomplicate things unnecessarily, each sharing setup will hav
 
 We will also set up all libraries as [ES Modules](https://nodejs.org/api/esm.html#introduction). All libraries (with exception of the barebones example) will be written in [TypeScript](https://www.typescriptlang.org/). We are going to use [`pnpm`](https://pnpm.io/) as a package manager (but everything will work with `npm` or `yarn` just fine).
 
+To run a specific library locally,
+
+1. clone the repo,
+2. `pnpm install` at the root,
+3. `pnpm build` in the library of your choice,
+4. `pnpm dev` in its consuming application.
+
 ## [Level 1: Barebones](./lib/bare/)
 
 > **Note**

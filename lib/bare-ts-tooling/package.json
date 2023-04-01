@@ -19,6 +19,6 @@
   },
   "scripts": {
     "build": "tsup",
-    "lint": "DEBUG=eslint:linter eslint ."
+    "lint": "eslint ."
   }
 }

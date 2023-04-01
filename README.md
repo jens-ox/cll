@@ -262,6 +262,37 @@ Update the `package.json` accordingly:
 
 Running `pnpm build` now takes 1.4s on my machine, and only 4ms of those are spent on actually compiling the library.
 
+**GitHub Action**
+
+> **Note**
+>
+> As this repository is a monorepo, all actions will be in `.github/workflows`. If you copy one library from here, don't forget to also copy the respective workflow!
+
+We'll add a simple GitHub Actions job that lints the library and builds it:
+
+
+```yml
+name: bare-ts-tooling
+on: [push]
+jobs:
+  Simple-Gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.2.0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "pnpm"
+      - run: pnpm install
+      - name: Linting
+        run: pnpm --filter @ccl/lib-bare-ts-tooling lint
+      - name: Build
+        run: pnpm --filter @ccl/lib-bare-ts-tooling build
+```
+
 ## Appendix
 
 ### Dependency Types

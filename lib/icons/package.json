@@ -1,0 +1,20 @@
+{
+  "name": "@cll/lib-icons",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "devDependencies": {
+    "@svgr/cli": "^7.0.0",
+    "@types/react": "^18.0.35",
+    "tsup": "^6.7.0",
+    "typescript": "5.0.3"
+  },
+  "scripts": {
+    "clean": "rm -rf tsx && rm -rf dist",
+    "svgr": "svgr --typescript --out-dir tsx src/icons",
+    "build": "pnpm clean && pnpm svgr && tsup"
+  },
+  "dependencies": {
+    "react": "^18.2.0"
+  }
+}

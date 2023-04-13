@@ -10,11 +10,13 @@ graph LR;
     4(css);
     5(tailwind);
     6(mui);
+    7(icons);
     1-->2;
     2-->3;
     3-->4;
     4-->5;
     3-->6;
+    3-->7;
 ```
 
 ## Motivation
@@ -31,6 +33,7 @@ Currently the following setups are available - each one builds up on the previou
 - [**css**](#level-4-css) - adds global and component styling to `bare-ts-tooling`.
 - [**tailwind**](#level-5-tailwind) - adds [TailwindCSS](https://tailwindcss.com/) to `css`.
 - [**mui**](#level-6-material-ui) - based on `bare-ts-tooling`, custom Material UI theme and custom component.
+- [**icons**](#level-7-icon-library) - based on `bare-ts-tooling`, icon library that directly converts SVG files.
 
 ## Setup
 
@@ -648,6 +651,74 @@ export const appTheme = createTheme(theme, {
 All that's left to do is to use some component, like the fancy button in our case, and consume the theme where necessary:
 
 ![MUI](./.github/screenshots/mui.jpeg)
+
+## Level 7: Icon Library
+
+> **Note**
+>
+> Summary: TypeScript, tsup, svgr
+
+In this level, we want to export our existing SVG icons as an icon library. We will be using [`bare-ts-tooling`](#level-3-bare-bones-typescript-with-tooling) as a base layer, but can remove everything related to ESLint, as we are only going to deal with SVG source files.
+
+There are different approaches to bundling icons as a library - for example, you can manually create a bundle directly from SVG files by writing a custom parser, or you could directly bundle the SVG files and embed them properly at runtime.
+
+We want to expose clean ES Modules that are nicely tree-shakable, so we are going to convert the SVG icons to React components.
+
+### Converting SVG to TSX
+
+As will all other libraries, we want to expose an ES Module with TypeScript declarations alongside it. If we would be creating a vanilla JS library, we could directly convert the SVGs into JS without any JS-TS transpiling.
+
+We are going to use [`svgr`](https://react-svgr.com/) to convert SVG to TSX:
+
+1. Install the SVGR cli: `pnpm add -D @svgr/cli`
+2. Place all your SVGs in one folder, e.g. `src/icons`.
+3. Create a script in your `package.json` that uses `svgr` to convert the icons to TSX:
+    ```json
+    {
+      "scripts": {
+        "svgr": "svgr --typescript --out-dir tsx src/icons"
+      }
+    }
+    ```
+4. Adjust the `tsup.config.ts` to ingest the `svgr` output:
+    ```ts
+    import { defineConfig } from 'tsup'
+
+    export default defineConfig({
+      entry: ['tsx/index.ts'],
+      target: 'esnext',
+      format: 'esm',
+      dts: true,
+      sourcemap: true,
+      minify: false
+    })
+    ```
+5. In `tsconfig.json`, change `moduleResolution` to `node`, as `svgr` doesn't use file extensions in the generated TSX.
+6. Add `tsx` (the `svgr` output directory) to your `.gitignore`.
+7. Add a `clean` script to your `package.json`:
+    ```json
+    {
+      "scripts": {
+        "clean": "rm -rf tsx && rm -rf dist"
+      }
+    }
+    ```
+8. Cable all scripts together into a `build` script:
+    ```json
+    {
+      "scripts": {
+        "build": "pnpm clean && pnpm svgr && tsup"
+      }
+    }
+    ```
+
+Running `pnpm build` should now
+
+- remove old build files,
+- generate TSX based on the SVG files in `src/icons`, and
+- convert the generated TSX into a nice bundle.
+
+That's it!
 
 ## Appendix
 

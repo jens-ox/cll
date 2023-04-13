@@ -11,7 +11,7 @@
   },
   "scripts": {
     "clean": "rm -rf tsx && rm -rf dist",
-    "svgr": "svgr --typescript --out-dir tsx src/icons",
+    "svgr": "svgr --icon --ref --typescript --out-dir tsx src/icons",
     "build": "pnpm clean && pnpm svgr && tsup"
   },
   "dependencies": {

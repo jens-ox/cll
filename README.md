@@ -676,10 +676,11 @@ We are going to use [`svgr`](https://react-svgr.com/) to convert SVG to TSX:
     ```json
     {
       "scripts": {
-        "svgr": "svgr --typescript --out-dir tsx src/icons"
+        "svgr": "svgr --icon --ref --typescript --out-dir tsx src/icons"
       }
     }
     ```
+    (`--icon` is needed to that `svgr` keeps viewboxes, and `--ref` adds `forwardRef` statements)
 4. Adjust the `tsup.config.ts` to ingest the `svgr` output:
     ```ts
     import { defineConfig } from 'tsup'
